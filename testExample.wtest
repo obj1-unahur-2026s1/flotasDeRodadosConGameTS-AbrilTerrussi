@@ -1,9 +1,117 @@
-import example.pepita
+import rodados.*
+import dependencia.*
+import pedidos.*
 
-describe "group of tests for pepita" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+describe "test con dos dependecias" {
+
+  const cachito = new ChevroletCorsa (color="Rojo")
+  const corsaAzul = new ChevroletCorsa (color="Azul")
+  const corsaVerde = new ChevroletCorsa (color="Verde")
+  const kwid1 = new RenaultKwid ()
+  const autoEspecial = new AutoEspecial (capacidad= 5, velocidadMaxima=160, peso=1200, color="Beige")
+  const kwid2 = new RenaultKwid ()
+  const kwid3 = new RenaultKwid ()
+  const kwid4 = new RenaultKwid ()
+
+  const deportes = new Dependencia (cantEmpleados = 45)
+
+  const cultura = new Dependencia (cantEmpleados = 31)
+
+  const pedido1 = new Pedido (distanciaARecorrrer= 960, tiempoMaximo=8, cantPasajerosATransportar= 4)
+  const pedido2 = new Pedido (distanciaARecorrrer= 960, tiempoMaximo=8, cantPasajerosATransportar= 6)
+  const pedido3 = new Pedido (distanciaARecorrrer= 960, tiempoMaximo=6, cantPasajerosATransportar= 6)
+
+  method initialize(){
+    //añadir a flota deportes
+    deportes.agregarAFlota(cachito)
+    deportes.agregarAFlota(corsaAzul)
+    deportes.agregarAFlota(corsaVerde)
+    kwid1.ponerTanque()
+    deportes.agregarAFlota(kwid1)
+    deportes.agregarAFlota(autoEspecial)
+
+    //anañdir a flota cultura
+    cultura.agregarAFlota(cachito) 
+    kwid2.ponerTanque()
+    cultura.agregarAFlota(kwid2) 
+    kwid3.ponerTanque()
+    cultura.agregarAFlota(kwid3)
+    kwid4.quitarTanque()
+    cultura.agregarAFlota(kwid4) 
+    trafic.cambiarInterior(popular)
+    trafic.cambiarMotor(bataton)
+    cultura.agregarAFlota(trafic)
+
+    //añadir colores a pedido1
+    pedido1.agregarColoresincompatibles("Azul")
+    pedido1.agregarColoresincompatibles("Negro")
+
+     //añadir colores a pedido2
+    pedido2.agregarColoresincompatibles("Azul")
+    pedido2.agregarColoresincompatibles("Negro")
+    pedido2.agregarColoresincompatibles("Rojo")
+  }
+  test "peso total de la flota de desportes es de 6450" {
+    assert.equals(6450, deportes.pesoTotalFlota())
+  }
+
+  test "peso total de la flota de cultura es de 10700"{ 
+    assert.equals(10700, cultura.pesoTotalFlota())
+
+  }
+
+  test "flota deportes esta bien equipada"{
+    assert.that(deportes.estaBienEquipada())
+  }
+
+  test "flota de cultura NO esta bien equipada"{
+    assert.notThat(cultura.estaBienEquipada())
+  }
+
+  test "capacidad total en color azul de flota deportes es 7"{
+    assert.equals(7, deportes.capacidadTotalEnColor("Azul"))
+  }
+
+  test "capacidad total en color azul de flota cultura es de 10"{
+    assert.equals(10, cultura.capacidadTotalEnColor("Azul"))
+  }
+
+  test "color de rodado mas rapido de flota deportes es el Beige (autoespecial)"{
+    assert.equals("Beige", deportes.colorDelRodadoMasRapido())
+  }
+
+  test "color de rodado mas rapido de flota cultura es el Beige (autoespecial)"{
+    assert.equals("Rojo", cultura.colorDelRodadoMasRapido())
+  }
+
+  test "la flota deportes es grande "{
+    assert.that(deportes.esGrande())
+  }
+
+  test "la flota cultura No es grande "{
+    assert.notThat(cultura.esGrande())
+  }
+
+  test "la capacidad faltante de la fltoa deportes es de 25"{
+    assert.equals(25, deportes.capacidadFaltante())
+  }
+  test "la capacidad faltante de la fltoa deportes es de 5"{
+    assert.equals(5, cultura.capacidadFaltante())
+  }
+
+  //----------------pedidos-----------------------
+
+  test "auto cachito peude satisfacer al pedido 1"{
+    assert.that(pedido1.puedeSatisfacerAlPedido(cachito))
+  }
+
+  test "auto cachito no puede satisfacer al pedido 1 si rojo esta en colores incompatbiles"{
+    assert.notThat(pedido2.puedeSatisfacerAlPedido(cachito))
+  }
+
+  test "auto cachito no puede satisfacer al pedido 3"{
+    assert.notThat(pedido3.puedeSatisfacerAlPedido(cachito))
   }
 
 }
